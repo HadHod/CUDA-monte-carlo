@@ -1,1 +1,1 @@
-# CUDA-monte-carlo
+# CUDA monte carlo
