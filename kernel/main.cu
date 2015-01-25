@@ -1,8 +1,26 @@
-__global__
-void estimatePI(int* rslt_data, const double* rnd_values1, const double* rnd_values2) {
-    const unsigned int tid = blockIdx.x * blockDim.x + threadIdx.x;
-    const double v1 = rnd_values1[tid];
-    const double v2 = rnd_values2[tid];
+#include <curand_kernel.h>
 
-    rslt_data[tid] = (v1 * v1 + v2 * v2 <= 1) ? 1 : 0;
+// __global__ void setup_kernel ( curandState * state, unsigned long seed ) {
+//     int id = threadIdx.x;
+//     curand_init ( seed, id, 0, &state[id] );
+// }
+
+// __global__ void generate( curandState* globalState ) {
+//     int ind = threadIdx.x;
+//     curandState localState = globalState[ind];
+//     float RANDOM = curand_uniform( &localState );
+//     globalState[ind] = localState;
+// }
+
+__global__
+void estimatePI(double* resultData) {
+    const unsigned int tid = (blockIdx.x * blockDim.x) + threadIdx.x;
+
+    curandState state;
+    // curand_init(tid, tid, 0, &state);
+    float RANDOM = curand_uniform( &state );
+
+    printf("Seed: %f %i\n", RANDOM);
+
+    resultData[tid] = true ? 1 : 0;
 }
